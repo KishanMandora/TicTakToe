@@ -1,9 +1,24 @@
+const readline = require("readline");
 const ticTacToe = require("./engine");
 
-console.log("Welcome to Tic Tac Toe!", ticTacToe);
-const play = ticTacToe("Luffy", "Naruto");
+const args = process.argv.slice(2);
 
-let result, boardOrMsg;
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
+
+const [firstPlayer = "Luffy", secondPlayer = "Naruto"] = args;
+
+const play = ticTacToe(firstPlayer, secondPlayer);
+
+console.log(`Welcome to Tic Tac Toe! ${firstPlayer} vs ${secondPlayer}`);
+
+let result, boardOrMsg, status;
+
+function getPlayerInput(text, callback) {
+  rl.question(text, callback);
+}
 
 function printBoard(board) {
   console.log("Board:");
@@ -16,17 +31,25 @@ function printBoard(board) {
   process.stdout.write("\n");
 }
 
-[result, boardOrMsg] = play("X", 1);
-result ? printBoard(boardOrMsg) : console.log(boardOrMsg);
+function playGame(playerTurn) {
+  getPlayerInput(`${playerTurn}'s turn: `, (playerInput) => {
+    const [playerPlay, move] = playerInput.split(" ");
+    [result, boardOrMsg, status] = play(playerPlay.toUpperCase(), move);
+    result ? printBoard(boardOrMsg) : console.log(boardOrMsg);
 
-[result, boardOrMsg] = play("O", 2);
-result ? printBoard(boardOrMsg) : console.log(boardOrMsg);
+    if (status === "ongoing") {
+      const nextPlayer = !result
+        ? playerTurn
+        : playerTurn === firstPlayer
+        ? secondPlayer
+        : firstPlayer;
 
-[result, boardOrMsg] = play("X", 4);
-result ? printBoard(boardOrMsg) : console.log(boardOrMsg);
+      playGame(nextPlayer);
+    } else {
+      console.log(status);
+      rl.close();
+    }
+  });
+}
 
-[result, boardOrMsg] = play("O", 5);
-result ? printBoard(boardOrMsg) : console.log(boardOrMsg);
-
-[result, boardOrMsg] = play("X", 10);
-result ? printBoard(boardOrMsg) : console.log(boardOrMsg);
+playGame(firstPlayer);

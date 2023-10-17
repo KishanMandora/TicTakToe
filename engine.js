@@ -47,7 +47,7 @@ function ticTacToe(xName, oName) {
     winningCombos.forEach((combo) => {
       const [a, b, c] = combo;
       if (board[a] === board[b] && board[b] === board[c] && board[a] !== "") {
-        result = `winner is ${players[currentPlayer]}`;
+        result = `Congrats ${players[currentPlayer]} you have won the game!`;
         return result;
       }
     });
@@ -62,12 +62,13 @@ function ticTacToe(xName, oName) {
     return result;
   };
 
-  return (player, move) => {
-    // validate the right player is playing
-    if (player !== currentPlayer) {
+  return (play, move) => {
+    // validate the right play is playing
+    if (play !== currentPlayer) {
       return [
         false,
-        `Sorry ${players[player]}, It's not your turn, try again later`,
+        `Sorry ${players[currentPlayer]}, wrong play you need to enter ${currentPlayer}, try again`,
+        board[0],
       ];
     }
 
@@ -76,6 +77,7 @@ function ticTacToe(xName, oName) {
       return [
         false,
         `Sorry ${players[currentPlayer]}, ${move} is not a valid move, try again`,
+        board[0],
       ];
     }
 
@@ -83,7 +85,7 @@ function ticTacToe(xName, oName) {
     board[0] = getBoardStatus();
     currentPlayer = nextPlayer[currentPlayer];
 
-    return [true, board];
+    return [true, board, board[0]];
   };
 }
 
