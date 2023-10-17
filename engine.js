@@ -1,7 +1,7 @@
 function ticTacToe(xName, oName) {
   const X = "X";
   const O = "O";
-  const currentPlayer = X;
+  let currentPlayer = X;
 
   const players = {
     X: xName,
@@ -14,7 +14,7 @@ function ticTacToe(xName, oName) {
   };
 
   const board = [
-    "not started", // ongoing, X, O, draw, not started
+    "ongoing", // ongoing, X, O, draw,
     "",
     "",
     "",
@@ -46,8 +46,8 @@ function ticTacToe(xName, oName) {
     // check for a winner
     winningCombos.forEach((combo) => {
       const [a, b, c] = combo;
-      if (board[a] === board[b] && board[b] === board[c]) {
-        result = `winner is ${currentPlayer}`;
+      if (board[a] === board[b] && board[b] === board[c] && board[a] !== "") {
+        result = `winner is ${players[currentPlayer]}`;
         return result;
       }
     });
@@ -63,20 +63,28 @@ function ticTacToe(xName, oName) {
   };
 
   return (player, move) => {
-    // validate the rght player is playing
+    // validate the right player is playing
     if (player !== currentPlayer) {
-      return [false, `Sorry, It's not ${currentPlayer}'s turn, try again`];
+      return [
+        false,
+        `Sorry ${players[player]}, It's not your turn, try again later`,
+      ];
     }
 
     // validate the right move
-    if (isValidMove(move)) {
-      return [false, `Sorry, ${move} is not a valid move, try again`];
+    if (!isValidMove(move)) {
+      return [
+        false,
+        `Sorry ${players[currentPlayer]}, ${move} is not a valid move, try again`,
+      ];
     }
 
     board[move] = currentPlayer;
     board[0] = getBoardStatus();
     currentPlayer = nextPlayer[currentPlayer];
 
-    return [true];
+    return [true, board];
   };
 }
+
+module.exports = ticTacToe;
