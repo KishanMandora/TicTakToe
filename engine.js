@@ -13,6 +13,7 @@ function ticTacToe(xName, oName) {
     O: X,
   };
 
+  // visual representation of the board updated by prettier
   const board = [
     "ongoing", // ongoing, X, O, draw,
     "",
@@ -44,13 +45,13 @@ function ticTacToe(xName, oName) {
     ];
 
     // check for a winner
-    winningCombos.forEach((combo) => {
-      const [a, b, c] = combo;
+    for (let i = 0; i < winningCombos.length; i++) {
+      const [a, b, c] = winningCombos[i];
       if (board[a] === board[b] && board[b] === board[c] && board[a] !== "") {
         result = `Congrats ${players[currentPlayer]} you have won the game!`;
         return result;
       }
-    });
+    }
 
     // check for a draw
     if (board.every((cell) => cell !== "")) {
